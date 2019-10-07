@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'photo-storage-client'`, () => {
+  it(`should have as title 'angular-client'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('photo-storage-client');
+    expect(app.title).toEqual('angular-client');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('photo-storage-client app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('angular-client app is running!');
   });
 });
