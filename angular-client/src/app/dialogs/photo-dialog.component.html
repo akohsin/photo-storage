@@ -1,0 +1,30 @@
+<form role="form" #photoForm="ngForm">
+<div mat-dialog-content>
+  <mat-card>
+    <mat-card-title>Upload new photo</mat-card-title>
+    <mat-form-field appearance="legacy">
+      <mat-label>Browse a file</mat-label>
+      <input matInput [(ngModel)]="newFileName" name="layerFile" disabled>
+      <label matSuffix for="uploadPicture">
+        <mat-icon class="black-pointer">folder_open</mat-icon>
+      </label>
+      <mat-hint>Choose .jpg file</mat-hint>
+    </mat-form-field>
+    <input type="file" id="uploadPicture" class="hidden-input" accept=".jpg"
+           name="photo" ng2FileSelect [uploader]="uploader"
+           (change)="selectFile($event.target.files[0])">
+  </mat-card>
+</div>
+<div mat-dialog-actions>
+  <button type="submit" mat-raised-button
+          (click)="saveChanges()">
+    <mat-icon>save</mat-icon>
+    Save
+  </button>
+  <button mat-raised-button (click)="closeDialog()">
+    <mat-icon>close</mat-icon>
+    Discard
+  </button>
+</div>
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</form>

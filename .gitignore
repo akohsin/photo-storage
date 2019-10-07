@@ -44,3 +44,36 @@ photo-storage-client/typings
 # System Files
 photo-storage-client/.DS_Store
 photo-storage-client/Thumbs.db
+
+
+photo-storage-backend/HELP.md
+photo-storage-backend/target/
+photo-storage-backend/!.mvn/wrapper/maven-wrapper.jar
+photo-storage-backend/!**/src/main/**
+photo-storage-backend/!**/src/test/**
+
+### STS ###
+photo-storage-backend/.apt_generated
+photo-storage-backend/.classpath
+photo-storage-backend/.factorypath
+photo-storage-backend/.project
+photo-storage-backend/.settings
+photo-storage-backend/.springBeans
+photo-storage-backend/.sts4-cache
+
+### IntelliJ IDEA ###
+photo-storage-backend/.idea
+photo-storage-backend/*.iws
+photo-storage-backend/*.iml
+photo-storage-backend/*.ipr
+
+### NetBeans ###
+photo-storage-backend/nbproject/private/
+photo-storage-backend/nbbuild/
+photo-storage-backend/dist/
+photo-storage-backend/nbdist/
+photo-storage-backend/.nb-gradle/
+photo-storage-backend/build/
+
+### VS Code ###
+photo-storage-backend/.vscode/

@@ -1,0 +1,9 @@
+.hidden-input {
+  visibility: hidden;
+  height: 0;
+}
+
+.black-pointer{
+  cursor: pointer;
+  color: black;
+}
