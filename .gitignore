@@ -1,0 +1,46 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+photo-storage-client/dist
+photo-storage-client/tmp
+photo-storage-client/out-tsc
+# Only exists if Bazel was run
+photo-storage-client/bazel-out
+
+# dependencies
+photo-storage-client/node_modules
+
+# profiling files
+photo-storage-clientchrome-profiler-events*.json
+photo-storage-clientspeed-measure-plugin*.json
+
+# IDEs and editors
+photo-storage-client/.idea
+photo-storage-client/.project
+photo-storage-client/.classpath
+photo-storage-client/.c9/
+photo-storage-client/*.launch
+photo-storage-client/.settings/
+photo-storage-client/*.sublime-workspace
+
+# IDE - VSCode
+photo-storage-client/.vscode/*
+photo-storage-client/!.vscode/settings.json
+photo-storage-client/!.vscode/tasks.json
+photo-storage-client/!.vscode/launch.json
+photo-storage-client/!.vscode/extensions.json
+photo-storage-client/.history/*
+
+# misc
+photo-storage-client/.sass-cache
+photo-storage-client/connect.lock
+photo-storage-client/coverage
+photo-storage-client/libpeerconnection.log
+photo-storage-client/npm-debug.log
+photo-storage-client/yarn-error.log
+photo-storage-client/testem.log
+photo-storage-client/typings
+
+# System Files
+photo-storage-client/.DS_Store
+photo-storage-client/Thumbs.db
