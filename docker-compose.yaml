@@ -25,8 +25,8 @@ services:
     env_file:
       - configuration.env
     volumes:
-      - ~/.photos:/maps
-      - ~/.thumbnail:/thumbnails
+      - ~/.photo:/photo
+      - ~/.thumbnail:/thumbnail
     image: "photo-storage-backend:latest"
     ports:
       - 8080:8080

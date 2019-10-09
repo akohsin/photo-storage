@@ -49,7 +49,7 @@ export class PhotoListComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private search(value: string) {
-    return this.photoService.searchPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex, value).subscribe(data => {
+    return this.photoService.searchPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex, this.paginator.pageSize, value).subscribe(data => {
       if (data !== null && data.content !== undefined && data.content.length > 0) {
         console.log(data)
         console.log(data.content.length)
@@ -72,7 +72,7 @@ export class PhotoListComponent implements AfterViewInit, OnDestroy, OnInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.photoService.getPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex);
+          return this.photoService.getPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex, this.paginator.pageSize);
         }),
         map(data => {
           this.isLoadingResults = false;

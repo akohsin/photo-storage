@@ -17,4 +17,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     Page<Photo> getAllByUser(User user, Pageable pageRequest);
 
     Page<Photo> findAllByUserAndFilenameContains(User user, String fileName, Pageable pageRequest);
+
+    Long countByUser(User user);
 }

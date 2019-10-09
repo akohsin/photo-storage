@@ -23,9 +23,9 @@ export class PhotoService {
     this.topic.next(message);
   }
 
-  getPhotos(sort: string, order: string, page: number): Observable<PhotoListDto> {
+  getPhotos(sort: string, order: string, page: number, perPage: number,): Observable<PhotoListDto> {
     const requestUrl = `http://${environment.ip}:${environment.port}/photo`;
-    const params = new HttpParams().set('perPage', '30').set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order);
+    const params = new HttpParams().set('perPage', perPage.toFixed(0)).set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order);
     return this.httpClient.get<PhotoListDto>(requestUrl, {params, observe: 'body'});
   }
 
@@ -45,9 +45,9 @@ export class PhotoService {
     });
   }
 
-  searchPhotos(sort: string, order: string, page: number, value: string): Observable<PhotoListDto> {
+  searchPhotos(sort: string, order: string, page: number, perPage: number, value: string): Observable<PhotoListDto> {
     const requestUrl = `http://${environment.ip}:${environment.port}/photo`;
-    const params = new HttpParams().set('perPage', '30').set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order)
+    const params = new HttpParams().set('perPage', perPage.toFixed(0)).set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order)
       .set('filename', value);
     return this.httpClient.get<PhotoListDto>(requestUrl, {params, observe: 'body'});
   }

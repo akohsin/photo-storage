@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 @Service
 public class PhotoService {
 
-    @Value("${photos.path:/photos/}")
+    @Value("${photos.path:photo/}")
     private String path;
 
-    @Value("${photos.thumbnail-path:/thumbnails/}")
+    @Value("${photos.thumbnail-path:thumbnail/}")
     private String thumbnailsPath;
 
     private PhotoRepository photoRepository;
@@ -125,7 +125,7 @@ public class PhotoService {
         Pageable pageRequest = createPageRequest(perPage, page, sortField, direction);
 
         List<PhotoResponseDto> responseDtoList = mapEntityToDto(photoRepository.getAllByUser(user, pageRequest));
-        return new PaginatedDto<>(responseDtoList, photoRepository.count());
+        return new PaginatedDto<>(responseDtoList, photoRepository.countByUser(user));
     }
 
     public PaginatedDto<PhotoResponseDto> findByName(Integer perPage, Integer page, SortField sortField, Direction direction, String fileName, User user) {
