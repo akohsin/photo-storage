@@ -8,13 +8,24 @@ public class PhotoResponseDto {
 
     private String created;
 
+    private byte[] thumbnail;
+
     public PhotoResponseDto() {
     }
 
-    public PhotoResponseDto(Long id, String filename, String created) {
+    public PhotoResponseDto(Long id, String filename, String created, byte[] thumbnail) {
         this.id = id;
         this.filename = filename;
         this.created = created;
+        this.thumbnail = thumbnail;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public Long getId() {

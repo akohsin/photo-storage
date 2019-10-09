@@ -15,9 +15,11 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import {EmailDialogComponent} from '../dialogs/email-dialog-component';
-import {PhotoDialogComponent} from '../dialogs/photo-dialog-component';
-import {FormsModule} from '@angular/forms';
+import {PhotoDialogComponent} from '../dialogs/photo-upload-dialog/photo-dialog-component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FileUploadModule} from 'ng2-file-upload';
+import {LoginRoutingModule} from '../login/login-routing.module';
+import {PhotoDisplayComponent} from '../dialogs/photo-display-dialog/photo-display-component';
 
 
 @NgModule({
@@ -42,11 +44,12 @@ import {FileUploadModule} from 'ng2-file-upload';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
   ],
   entryComponents: [
     EmailDialogComponent,
-    PhotoDialogComponent
+    PhotoDialogComponent,
     ]
 })
 export class LayoutModule {

@@ -19,8 +19,11 @@ import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+    private final TokenGenerator tokenGenerator;
+
+    public JWTAuthorizationFilter(AuthenticationManager authManager, TokenGenerator tokenGenerator) {
         super(authManager);
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
@@ -46,26 +49,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req) {
 
-        String token = req.getHeader(SecurityConstants.HEADER_STRING);
-        if (token == null) {
-            token = req.getParameter("Authorization");
-        }
-        if (token != null) {
-            //parse the token
-            String user = Jwts.parser()
-                    .setSigningKey(SecurityConstants.SECRET.getBytes())
-                    .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                    .getBody()
-                    .getSubject();
-            String ip = Jwts.parser().setSigningKey(SecurityConstants.SECRET.getBytes())
-                    .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                    .getBody()
-                    .getIssuer();
+        String email = tokenGenerator.parseEmail(req);
+        String ip = tokenGenerator.parseIp(req);
 
-            if (user != null && RequestTranslator.getRemoteIpFrom(req).equals(ip)) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }
-            return null;
+        if (email != null && RequestTranslator.getRemoteIpFrom(req).equals(ip)) {
+            return new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
         }
         return null;
     }

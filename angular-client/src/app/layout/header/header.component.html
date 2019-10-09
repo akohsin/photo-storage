@@ -2,6 +2,10 @@
   <mat-toolbar-row>
     <span>Photo Storage</span>
     <span class="example-spacer"></span>
+    <span style="padding-right: 4px">Search for: </span>
+    <mat-form-field>
+      <input matInput (change)="search($event)">
+    </mat-form-field>
     <mat-icon class="example-icon" matTooltip="Upload new photo" (click)="uploadPhoto()">add</mat-icon>
     <mat-icon class="example-icon" matTooltip="Change your e-mail" (click)="changeEmail()">account_circle</mat-icon>
     <mat-icon class="example-icon" matTooltip="Log out" (click)="logout()">exit_to_app</mat-icon>

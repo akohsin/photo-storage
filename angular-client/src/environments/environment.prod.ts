@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  ip: 'api',
+  ip: 'localhost',
   port: 8080
 };

@@ -1,8 +1,7 @@
-import {HttpClient} from '@angular/common/http';
-import {Component, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, OnDestroy, OnInit} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {merge, Observable, of as observableOf} from 'rxjs';
+import {merge, of as observableOf, Subscription} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {PhotoService} from '../../../services/photo.service';
 
@@ -11,44 +10,103 @@ import {PhotoService} from '../../../services/photo.service';
   templateUrl: './photo-list.component.html',
   styleUrls: ['./photo-list.component.css']
 })
-export class PhotoListComponent  implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'created', 'name', 'thumbnail'];
+export class PhotoListComponent implements AfterViewInit, OnDestroy, OnInit {
+  displayedColumns: string[] = ['id', 'created', 'filename', 'thumbnail', 'action'];
   data: PhotoInfoDto[] = [];
+  subscription: Subscription;
 
   resultsLength = 0;
   isLoadingResults = true;
-  isRateLimitReached = false;
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
-  constructor(private photoService: PhotoService) {}
+  constructor(private photoService: PhotoService) {
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.photoService.messages$.subscribe((message) => {
+      console.log(message);
+      if (message.startsWith('SEARCH_FOR')) {
+        const type = message.split(':')[1];
+        if (type !== undefined && type !== '') {
+          this.search(type);
+        } else {
+          this.refresh();
+        }
+      } else {
+        this.refresh();
+      }
+    });
+  }
 
   ngAfterViewInit() {
-    this.sort.sortChange.pipe(
+    this.refresh();
+  }
+
+  private search(value: string) {
+    return this.photoService.searchPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex, value).subscribe(data => {
+      if (data !== null && data.content !== undefined && data.content.length > 0) {
+        console.log(data)
+        console.log(data.content.length)
+        for (let i = 0; i < data.content.length; i++) {
+          const base64 = data.content[i].thumbnail;
+          data.content[i].thumbnail = 'data:image/png;base64,' + base64;
+          console.log(data.content[i].thumbnail);
+        }
+        this.data = data.content;
+      } else {
+        alert('no photos found');
+        this.data = [];
+      }
+    });
+  }
+
+  private refresh() {
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.photoService.getPhotos(this.sort.active, this.sort.direction);
+          return this.photoService.getPhotos(this.sort.active, this.sort.direction, this.paginator.pageIndex);
         }),
         map(data => {
           this.isLoadingResults = false;
-          this.isRateLimitReached = false;
 
           this.resultsLength = data.totalCount;
+          console.log(data);
 
-          return data.items;
+          return data.content;
         }),
         catchError(() => {
+          console.log('asdad');
           this.isLoadingResults = false;
-          this.isRateLimitReached = true;
           return observableOf([]);
         })
-      ).subscribe(data => this.data = data);
+      ).subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
+        const base64 = data[i].thumbnail;
+        data[i].thumbnail = 'data:image/png;base64,' + base64;
+      }
+      this.data = data;
+    });
+  }
+
+  remove(id: any) {
+    this.photoService.delete(id);
+  }
+
+  openPhoto(id: any) {
+    this.photoService.getPhoto(id);
   }
 }
 
 export interface PhotoListDto {
-  items: PhotoInfoDto[];
+  content: PhotoInfoDto[];
   totalCount: number;
 }
 
@@ -56,18 +114,5 @@ export interface PhotoInfoDto {
   id: string;
   created: string;
   name: string;
-  thumbnail: [];
-}
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
-  constructor(private httpClient: HttpClient) {}
-
-  getRepoIssues(sort: string, order: string, page: number): Observable<PhotoListDto> {
-    const href = 'https://api.github.com/search/issues';
-    const requestUrl =
-      `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1}`;
-
-    return this.httpClient.get<PhotoListDto>(requestUrl);
-  }
+  thumbnail: string;
 }

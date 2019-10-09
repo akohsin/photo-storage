@@ -3,6 +3,15 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import { LayoutComponent } from '../layout/layout.component';
 import { LoginRoutingModule } from './login-routing.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 
 
 
@@ -10,7 +19,13 @@ import { LoginRoutingModule } from './login-routing.module';
   declarations: [LoginComponent],
   imports: [
     CommonModule,
-    LoginRoutingModule
+    FormsModule,
+    MatInputModule,
+    LoginRoutingModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class LoginModule { }

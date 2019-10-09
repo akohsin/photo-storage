@@ -1,6 +1,7 @@
 package com.akohsin.photostorage.security;
 
 import com.akohsin.photostorage.services.UserService;
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,21 +19,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserService userService;
 
+    private TokenGenerator tokenGenerator;
+
     @Autowired
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, TokenGenerator tokenGenerator) {
+        this.tokenGenerator = tokenGenerator;
         this.userService = userService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/register").permitAll()
-                .anyRequest().authenticated()
+        http.cors().and().csrf().disable()
+                .authorizeRequests().antMatchers("/user/register").permitAll()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), tokenGenerator))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), tokenGenerator))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -42,11 +43,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
-    }
-
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+//        return source;
+//    }
 }

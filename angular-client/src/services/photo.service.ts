@@ -1,27 +1,60 @@
-import { Injectable } from '@angular/core';
-import {Observable} from 'rxjs';
-import {PhotoListDto} from '../app/layout/photo-list/photo-list.component';
-import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {PhotoInfoDto, PhotoListDto} from '../app/layout/photo-list/photo-list.component';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {environment} from '../environments/environment';
+import {MatDialog} from '@angular/material';
+import {PhotoDisplayComponent} from '../app/dialogs/photo-display-dialog/photo-display-component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PhotoService {
 
-  constructor(private httpClient: HttpClient) { }
+  private topic: Subject<string>;
+  messages$: Observable<string>;
 
-  getPhotos(active: string, direction: string) {
-    console.log(active)
-    console.log(direction)
-    return this.getRepoIssues(active, direction,1);
+  constructor(private httpClient: HttpClient, private matDialog: MatDialog) {
+    this.topic = new Subject<string>();
+    this.messages$ = this.topic.asObservable();
   }
 
-  getRepoIssues(sort: string, order: string, page: number): Observable<PhotoListDto> {
-    const href = 'https://api.github.com/search/issues';
-    const requestUrl =
-      `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=1`;
-
-    return this.httpClient.get<PhotoListDto>(requestUrl);
+  share(message: string) {
+    this.topic.next(message);
   }
 
+  getPhotos(sort: string, order: string, page: number): Observable<PhotoListDto> {
+    const requestUrl = `http://${environment.ip}:${environment.port}/photo`;
+    const params = new HttpParams().set('perPage', '30').set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order);
+    return this.httpClient.get<PhotoListDto>(requestUrl, {params, observe: 'body'});
+  }
+
+  delete(id: any) {
+    const requestUrl = `http://${environment.ip}:${environment.port}/photo/${id}`;
+    return this.httpClient.delete<PhotoListDto>(requestUrl, {observe: 'body'}).subscribe(() => {
+      alert('Deleted successfully');
+      this.share('UPDATE');
+    });
+
+  }
+
+  getPhoto(id: any) {
+    const requestUrl = `http://${environment.ip}:${environment.port}/photo/${id}`;
+    this.httpClient.get<PhotoInfoDto>(requestUrl, {observe: 'body'}).subscribe((data) => {
+      this.matDialog.open(PhotoDisplayComponent, {data: {base64: data.thumbnail}});
+    });
+  }
+
+  searchPhotos(sort: string, order: string, page: number, value: string): Observable<PhotoListDto> {
+    const requestUrl = `http://${environment.ip}:${environment.port}/photo`;
+    const params = new HttpParams().set('perPage', '30').set('page', page.toFixed(0)).set('sortBy', sort).set('direction', order)
+      .set('filename', value);
+    return this.httpClient.get<PhotoListDto>(requestUrl, {params, observe: 'body'});
+  }
 }
+
+// "perPage") Integer perPage,
+//   @RequestParam(name = "page") Integer page,
+//   @RequestParam(name = "sortBy") SortField sortField,
+//   @RequestParam(name = "filename", required = false) String fileName,
+//   @RequestParam(name = "direction"
