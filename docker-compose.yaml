@@ -33,7 +33,7 @@ services:
     restart: always
 
   mysql:
-    container_name: mysql-for-cyview
+    container_name: photo-storage-mysql
     image: mysql/mysql-server:5.7
     env_file:
       - configuration.env

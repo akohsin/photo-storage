@@ -3,4 +3,5 @@
 cd photo-storage-backend
 mvn package
 cd ..
-docker-compose up
+docker-compose build
+docker-compose up -d
